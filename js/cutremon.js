@@ -1,4 +1,5 @@
 let ataqueJugador
+let inputAtaqueJugador = []
 let ataqueEnemigo
 let banderaAtaqueJugador = 0
 let saludJugador = 3
@@ -10,6 +11,7 @@ let ataquesCutremon
 let btnAtqFuego
 let btnAtqAgua
 let btnAtqTierra
+let botones = []
 
 const contTarjetas= document.getElementById("contTarjetas")
 const sectionSelectAtq = document.getElementById('seleccionar-ataque')
@@ -204,6 +206,7 @@ function selectEnemyCutremon(){
     rng = aleatorio(0,cutremones.length-1)
     spanCutremonEnemigo.innerHTML = cutremones[rng].nombre
 
+    secuenciaAtaque()
     }
 
 function selectCutremon(){
@@ -253,7 +256,7 @@ function selectAtaques(cutremonJugador){
 function mostrarAtaques(ataques){
     ataques.forEach((ataque) =>{
         ataquesCutremon = `
-        <button id=${ataque.id} class="boton-ataque">${ataque.nombre}
+        <button id=${ataque.id} class="boton-ataque BATK">${ataque.nombre}
         </button>
         `
         contAtaques.innerHTML +=ataquesCutremon
@@ -263,10 +266,32 @@ function mostrarAtaques(ataques){
     btnAtqAgua = document.getElementById("btn-agua")
     btnAtqTierra = document.getElementById("btn-tierra")
 
+    botones = document.querySelectorAll('.BATK')
+
     btnAtqFuego.addEventListener('click',ataqueFuego)
     btnAtqAgua.addEventListener('click',ataqueAgua)
     btnAtqTierra.addEventListener('click',ataqueTierra)
 }
 
+function secuenciaAtaque(){
+    botones.forEach((boton)=>{
+        boton.addEventListener('click',(e) =>{
+            if (e.target.textcontent === '🔥'){
+                inputAtaqueJugador.push('FUEGO')
+                boton.style.background = '#354527'
+            }
+            else if (e.target.textcontent === '💧'){
+                inputAtaqueJugador.push('AGUA')
+                boton.style.background = '#354527'
+            }
+            else{
+                inputAtaqueJugador.push('TIERRA')
+                boton.style.background = '#354527' 
+            }
+        })
+    }
+
+    )
+}
 
 window.addEventListener('load', iniciarJuego)
