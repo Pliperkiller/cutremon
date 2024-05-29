@@ -1,0 +1,144 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Flavors&display=swap');
+
+body{
+    font-family: "Flavors", cursive;
+    background-color: #FFDB5C;
+}
+
+.titulo{
+    color: #FF70AB;
+    height: 80px;
+    background-color: #FFDB5C;
+    font-size: 50px;
+}
+
+.subtitulo{
+    color: #FF70AB;
+    font-size: 40px;
+
+}
+
+#seleccionar-cutremon{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.tarjeta-mokepon{
+    width: 180px;
+    height: 166px;
+    background: white;
+    padding: 20px;
+    box-sizing: border-box;
+    margin: 4px;
+    border: 1px solid #FFAF61;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+.tarjeta-mokepon img{
+    width: 141px;
+    height: 100px;
+}
+
+input{
+    display: none;
+}
+
+input:checked + label{
+    background-color: rgb(168, 129, 46);
+}
+
+#btn-cutremon{
+    width: 130px;
+    height: 50px;
+    padding: 10px;
+    box-sizing: border-box;
+    margin: 20px;
+    background: azure;
+}
+
+.tarjetas, .tarjetas-ataques{
+    display: flex;
+    gap: 20px;
+}
+
+#btn-cutremon{
+    width: 130px;
+    height: 50px;
+    padding: 10px;
+    box-sizing: border-box;
+    margin: 20px;
+    background: azure;
+    border-radius: 5px;
+    border: solid white;
+    font-family: "Flavors", cursive;;
+    color: #FFAF61;
+    background-color: #C3FF93;
+    border-color: #C3FF93;
+}
+
+#seleccionar-ataque{
+    flex-direction: column;
+    align-items: center;
+}
+
+.boton-ataque{
+    width: 100px;
+    height: 80px;
+    padding: 20px;
+    border-radius: 10px;
+    border: solid white;
+    font-family: "Flavors", cursive;;
+    color: #FFAF61;
+    background-color: #C3FF93;
+    border-color: #C3FF93;
+    box-sizing: border-box;
+}
+
+#mensajes{
+    background: aquamarine;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 10px;
+    width: 200px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+#boton-reiniciar{
+    border: none;
+    color: #FF70AB;
+    border-radius: 5px;
+    font-family: "Flavors", cursive;
+}
+
+.ataques{
+    display: grid;
+    grid-template-columns: 180px 180px;
+}
+
+.ataques-jugador, .ataques-enemigo{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+@media(max-width:360px){
+    .tarjetas{
+        flex-direction: column;
+    }
+
+    .tarjetas-ataques{
+        flex-direction: column;
+    }
+}
