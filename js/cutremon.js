@@ -1,6 +1,7 @@
 let ataqueJugador
 let inputAtaqueJugador = []
-let ataqueEnemigo
+let ataqueEnemigo = []
+let inputAtaqueEnemigo = []
 let banderaAtaqueJugador = 0
 let saludJugador = 3
 let saludEnemigo = 3
@@ -12,6 +13,9 @@ let btnAtqFuego
 let btnAtqAgua
 let btnAtqTierra
 let botones = []
+
+let victoriasJugador = 0
+let victoriasEnemigo = 0
 
 const contTarjetas= document.getElementById("contTarjetas")
 const sectionSelectAtq = document.getElementById('seleccionar-ataque')
@@ -137,27 +141,46 @@ function creaMensaje(result){
     ataquesEnemigo.appendChild(msgAtaqueEnemigo)
 }
 
+function compararAtaques(jugador,enemigo){
+    if (jugador == enemigo){
+        result = "Empate";
+
+    }
+    else if((jugador == "FUEGO" && enemigo == "TIERRA") || (jugador == "AGUA" && enemigo =="FUEGO") || (jugador =="TIERRA"& enemigo =="AGUA")){
+        result = "Victoria";
+    }
+    else{
+        result = "Derrota";        
+    }
+
+    return result
+
+}
+
 function combate(){
     let spanVidasJugador = document.getElementById("salud-jugador")
     let spanVidasEnemigo = document.getElementById("salud-enemigo")
 
-    if (ataqueJugador == ataqueEnemigo){
-        result = "Empate";
+    console.log(inputAtaqueJugador)
+    console.log(ataqueEnemigo)
 
-    }
-    else if((ataqueJugador == "Fuego🔥" && ataqueEnemigo == "Tierra🌱") || (ataqueJugador == "Agua💧" && ataqueEnemigo =="Fuego🔥") || (ataqueJugador =="Tierra🌱"& ataqueEnemigo =="Agua💧")){
-        result = "Ganaste";
-        saludEnemigo--
+    for (let i = 0; i<inputAtaqueJugador.length; i++){
+        let comparador = compararAtaques(inputAtaqueJugador[i],ataqueEnemigo[i])
 
-    }
-    else{
-        result = "Perdiste";
-        saludJugador--
+        if (comparador == "Victoria"){
+            victoriasJugador++
+        }
+        else if(comparador == "Derrota"){
+            victoriasEnemigo++
+        }
+
         
+
     }
 
-    spanVidasJugador.innerHTML = saludJugador
-    spanVidasEnemigo.innerHTML = saludEnemigo
+
+    spanVidasJugador.innerHTML = victoriasJugador
+    spanVidasEnemigo.innerHTML = victoriasEnemigo
 
     creaMensaje(result)
 
@@ -166,35 +189,23 @@ function combate(){
 
 
 function ataqueAleatorioEnemigo(){
-    rng = aleatorio(1,3).toString()
+    rng = aleatorio(0,inputAtaqueEnemigo.length)
+    
+    if(rng<=1){
+        ataqueEnemigo.push('FUEGO')
+    }
+    else if (rng<=3){
+        ataqueEnemigo.push('AGUA')
+    }
+    else{
+        ataqueEnemigo.push('TIERRA')
+    }
+    
+    if (ataqueEnemigo.length == 5){
+        
+        combate()
+    }
 
-    switch (rng){
-    case "1":
-        ataqueEnemigo = 'Fuego🔥'
-        break;
-    case "2":
-        ataqueEnemigo = 'Agua💧'
-        break;
-    case "3":
-        ataqueEnemigo = 'Tierra🌱'
-        break;}
-
-
-    combate()
-}
-
-function ataqueFuego(){
-    ataqueJugador = 'Fuego🔥'
-    ataqueAleatorioEnemigo()
-}
-
-function ataqueAgua(){
-    ataqueJugador = 'Agua💧'
-    ataqueAleatorioEnemigo()
-
-}function ataqueTierra(){
-    ataqueJugador = 'Tierra🌱'
-    ataqueAleatorioEnemigo()
 }
 
 function aleatorio(min,max){
@@ -205,9 +216,10 @@ function selectEnemyCutremon(){
 
     rng = aleatorio(0,cutremones.length-1)
     spanCutremonEnemigo.innerHTML = cutremones[rng].nombre
+    inputAtaqueEnemigo = cutremones[rng].ataques
 
     secuenciaAtaque()
-    }
+}
 
 function selectCutremon(){
 
@@ -256,9 +268,7 @@ function selectAtaques(cutremonJugador){
 function mostrarAtaques(ataques){
     ataques.forEach((ataque) =>{
         ataquesCutremon = `
-        <button id=${ataque.id} class="boton-ataque BATK">${ataque.nombre}
-        </button>
-        `
+        <button id=${ataque.id} class="boton-ataque BATK">${ataque.nombre}</button>`
         contAtaques.innerHTML +=ataquesCutremon
     })
 
@@ -268,14 +278,12 @@ function mostrarAtaques(ataques){
 
     botones = document.querySelectorAll('.BATK')
 
-    btnAtqFuego.addEventListener('click',ataqueFuego)
-    btnAtqAgua.addEventListener('click',ataqueAgua)
-    btnAtqTierra.addEventListener('click',ataqueTierra)
 }
 
 function secuenciaAtaque(){
     botones.forEach((boton)=>{
         boton.addEventListener('click',(e) =>{
+            
             if (e.target.textcontent === '🔥'){
                 inputAtaqueJugador.push('FUEGO')
                 boton.style.background = '#354527'
@@ -288,6 +296,10 @@ function secuenciaAtaque(){
                 inputAtaqueJugador.push('TIERRA')
                 boton.style.background = '#354527' 
             }
+            console.log(e.target.textcontent)
+            console.log(inputAtaqueJugador)
+
+            ataqueAleatorioEnemigo()
         })
     }
 
