@@ -86,7 +86,7 @@ function iniciarJuego(){
         `
         contTarjetas.innerHTML += opcionCutremon
 
-        console.log(document.getElementById(cutremon.nombre).checked)
+
     });
 
     inputEmputardo = document.getElementById('Emputardo')
@@ -157,12 +157,23 @@ function compararAtaques(jugador,enemigo){
 
 }
 
+function comprobarResultados(){
+    if (victoriasEnemigo == victoriasJugador){
+        result = "Empate"
+    }
+    else if (victoriasJugador > victoriasEnemigo){
+        result = "Jugador gana!"
+    }
+    else{
+        result = "Enemigo gana!"
+    }
+}
+
 function combate(){
     let spanVidasJugador = document.getElementById("salud-jugador")
     let spanVidasEnemigo = document.getElementById("salud-enemigo")
 
-    console.log(inputAtaqueJugador)
-    console.log(ataqueEnemigo)
+
 
     for (let i = 0; i<inputAtaqueJugador.length; i++){
         let comparador = compararAtaques(inputAtaqueJugador[i],ataqueEnemigo[i])
@@ -182,6 +193,7 @@ function combate(){
     spanVidasJugador.innerHTML = victoriasJugador
     spanVidasEnemigo.innerHTML = victoriasEnemigo
 
+    comprobarResultados()
     creaMensaje(result)
 
     checkStatus()
@@ -284,11 +296,11 @@ function secuenciaAtaque(){
     botones.forEach((boton)=>{
         boton.addEventListener('click',(e) =>{
             
-            if (e.target.textcontent === '🔥'){
+            if (e.target.innerHTML === '🔥'){
                 inputAtaqueJugador.push('FUEGO')
                 boton.style.background = '#354527'
             }
-            else if (e.target.textcontent === '💧'){
+            else if (e.target.innerHTML === '💧'){
                 inputAtaqueJugador.push('AGUA')
                 boton.style.background = '#354527'
             }
@@ -296,8 +308,6 @@ function secuenciaAtaque(){
                 inputAtaqueJugador.push('TIERRA')
                 boton.style.background = '#354527' 
             }
-            console.log(e.target.textcontent)
-            console.log(inputAtaqueJugador)
 
             ataqueAleatorioEnemigo()
         })
