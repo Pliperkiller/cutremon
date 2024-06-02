@@ -28,8 +28,7 @@ const spanCutremonEnemigo = document.getElementById("cutremon-enemigo")
 const spanCutremonJugador = document.getElementById("cutremon-jugador")
 const ataquesJugador = document.getElementById('ataques-jugador')
 const ataquesEnemigo = document.getElementById('ataques-enemigo')
-const msgAtaqueJugador = document.createElement('p')
-const msgAtaqueEnemigo = document.createElement('p')
+
 const sectionSelectCutremon = document.getElementById('seleccionar-cutremon')
 const contAtaques = document.getElementById('contAtaques')
 
@@ -45,29 +44,29 @@ class Cutremon{
 
 let emputardo = new Cutremon('Emputardo', './assets/emputardo.png',3)
 emputardo.ataques.push(
-    {nombre:'🔥',id:'btn-fuego'},
-    {nombre:'🔥',id:'btn-fuego'},
-    {nombre:'🔥',id:'btn-fuego'},
-    {nombre:'💧',id:'btn-agua'},
-    {nombre:'🌱',id:'btn-tierra'},
+    {nombre:'FUEGO',id:'btn-fuego'},
+    {nombre:'FUEGO',id:'btn-fuego'},
+    {nombre:'FUEGO',id:'btn-fuego'},
+    {nombre:'AGUA',id:'btn-agua'},
+    {nombre:'TIERRA',id:'btn-tierra'},
     )
 
 let retristre = new Cutremon('Retristre', './assets/retristre.png',3)
 retristre.ataques.push(
-    {nombre:'💧',id:'btn-agua'},
-    {nombre:'💧',id:'btn-agua'},
-    {nombre:'💧',id:'btn-agua'},
-    {nombre:'🔥',id:'btn-fuego'},
-    {nombre:'🌱',id:'btn-tierra'},
+    {nombre:'AGUA',id:'btn-agua'},
+    {nombre:'AGUA',id:'btn-agua'},
+    {nombre:'AGUA',id:'btn-agua'},
+    {nombre:'FUEGO',id:'btn-fuego'},
+    {nombre:'TIERRA',id:'btn-tierra'},
     )
 
 let escoberto = new Cutremon('Escoberto', './assets/escoberto.png',3)
 escoberto.ataques.push(
-    {nombre:'🌱',id:'btn-tierra'},
-    {nombre:'🌱',id:'btn-tierra'},
-    {nombre:'🌱',id:'btn-tierra'},
-    {nombre:'💧',id:'btn-agua'},
-    {nombre:'🔥',id:'btn-fuego'},
+    {nombre:'TIERRA',id:'btn-tierra'},
+    {nombre:'TIERRA',id:'btn-tierra'},
+    {nombre:'TIERRA',id:'btn-tierra'},
+    {nombre:'AGUA',id:'btn-agua'},
+    {nombre:'FUEGO',id:'btn-fuego'},
     )
 
 
@@ -107,38 +106,14 @@ function reiniciarJuego(){
 function gameOver(msg){
     
     msgSection.innerHTML = msg
-    btnAtqFuego.disabled = true
-    btnAtqAgua.disabled = true
-    btnAtqTierra.disabled = true
     sectionReiniciar.style.display = 'block'
 }
 
-function checkStatus(){
-    let restultadoFinal = ''
 
-    if(saludEnemigo == 0){
-        restultadoFinal = '- El enemigo se quedó sin vidas, ganaste la partida! 🎉'
-    }
-    else if(saludJugador == 0){
-        restultadoFinal = 'Te has quedado sin vidas, perdiste la partida... 😞'
-    }
-
-    if(restultadoFinal != ''){
-        gameOver(restultadoFinal)
-    }
-
-
-}
 
 function creaMensaje(result){
-
-
     msgSection.innerHTML = result
-    msgAtaqueJugador.innerHTML = ataqueJugador
-    msgAtaqueEnemigo.innerHTML = ataqueEnemigo
 
-    ataquesJugador.appendChild(msgAtaqueJugador)
-    ataquesEnemigo.appendChild(msgAtaqueEnemigo)
 }
 
 function compararAtaques(jugador,enemigo){
@@ -167,6 +142,22 @@ function comprobarResultados(){
     else{
         result = "Enemigo gana!"
     }
+
+    return result
+}
+
+function imprimirAtaques(ataqueJugador,ataqueEnemigo){
+    
+    let msgAtaqueJugador = document.createElement('p')
+    let msgAtaqueEnemigo = document.createElement('p')
+
+   
+    msgAtaqueJugador.innerHTML = ataqueJugador
+    msgAtaqueEnemigo.innerHTML = ataqueEnemigo
+
+    ataquesJugador.appendChild(msgAtaqueJugador)
+    ataquesEnemigo.appendChild(msgAtaqueEnemigo)
+
 }
 
 function combate(){
@@ -184,35 +175,42 @@ function combate(){
         else if(comparador == "Derrota"){
             victoriasEnemigo++
         }
-
-        
-
+        imprimirAtaques(inputAtaqueJugador[i],ataqueEnemigo[i])
     }
 
 
     spanVidasJugador.innerHTML = victoriasJugador
     spanVidasEnemigo.innerHTML = victoriasEnemigo
 
-    comprobarResultados()
-    creaMensaje(result)
+    let result = comprobarResultados()
+    gameOver(result)
 
-    checkStatus()
 }
 
 
-function ataqueAleatorioEnemigo(){
-    rng = aleatorio(0,inputAtaqueEnemigo.length)
+function ataqueAleatorioEnemigo(inputAtaqueEnemigo){
+    let ataquesTemporal = inputAtaqueEnemigo
+    let randIndex
+    let randElement
+
+    randIndex = aleatorio(0,ataquesTemporal.length-1)
+    randElement = ataquesTemporal.pop(randIndex)
+    console.log(randElement)
+    ataqueEnemigo.push(randElement.nombre)
+
+
+    // rng = aleatorio(0,inputAtaqueEnemigo.length)
     
-    if(rng<=1){
-        ataqueEnemigo.push('FUEGO')
-    }
-    else if (rng<=3){
-        ataqueEnemigo.push('AGUA')
-    }
-    else{
-        ataqueEnemigo.push('TIERRA')
-    }
-    
+    // if(rng<=1){
+    //     ataqueEnemigo.push('FUEGO')
+    // }
+    // else if (rng<=3){
+    //     ataqueEnemigo.push('AGUA')
+    // }
+    // else{
+    //     ataqueEnemigo.push('TIERRA')
+    // }
+   
     if (ataqueEnemigo.length == 5){
         
         combate()
@@ -226,7 +224,9 @@ function aleatorio(min,max){
 
 function selectEnemyCutremon(){
 
-    rng = aleatorio(0,cutremones.length-1)
+    rng = aleatorio(0,cutremones.length)
+    if (rng == cutremones.length){rng = cutremones.length-1}
+
     spanCutremonEnemigo.innerHTML = cutremones[rng].nombre
     inputAtaqueEnemigo = cutremones[rng].ataques
 
@@ -296,11 +296,11 @@ function secuenciaAtaque(){
     botones.forEach((boton)=>{
         boton.addEventListener('click',(e) =>{
             
-            if (e.target.innerHTML === '🔥'){
+            if (e.target.innerHTML === 'FUEGO'){
                 inputAtaqueJugador.push('FUEGO')
                 boton.style.background = '#354527'
             }
-            else if (e.target.innerHTML === '💧'){
+            else if (e.target.innerHTML === 'AGUA'){
                 inputAtaqueJugador.push('AGUA')
                 boton.style.background = '#354527'
             }
@@ -308,12 +308,14 @@ function secuenciaAtaque(){
                 inputAtaqueJugador.push('TIERRA')
                 boton.style.background = '#354527' 
             }
-
-            ataqueAleatorioEnemigo()
+            boton.disabled = true
+            ataqueAleatorioEnemigo(inputAtaqueEnemigo)
+            
         })
     }
 
     )
+ 
 }
 
 window.addEventListener('load', iniciarJuego)
