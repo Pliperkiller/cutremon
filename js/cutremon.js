@@ -1,3 +1,21 @@
+const contTarjetas= document.getElementById("contTarjetas")
+const sectionSelectAtq = document.getElementById('seleccionar-ataque')
+const sectionReiniciar = document.getElementById('boton-reiniciar')
+const btnCutremonPlayer = document.getElementById("btn-cutremon")
+
+const btnReiniciar = document.getElementById("boton-reiniciar")
+const msgSection = document.getElementById('resultado')
+const spanCutremonEnemigo = document.getElementById("cutremon-enemigo")
+const spanCutremonJugador = document.getElementById("cutremon-jugador")
+const ataquesJugador = document.getElementById('ataques-jugador')
+const ataquesEnemigo = document.getElementById('ataques-enemigo')
+
+const sectionSelectCutremon = document.getElementById('seleccionar-cutremon')
+const contAtaques = document.getElementById('contAtaques')
+
+const sectionVerMapa = document.getElementById('ver-mapa')
+const mapa = document.getElementById('mapa')
+
 let ataqueJugador
 let inputAtaqueJugador = []
 let ataqueEnemigo = []
@@ -17,20 +35,8 @@ let botones = []
 let victoriasJugador = 0
 let victoriasEnemigo = 0
 
-const contTarjetas= document.getElementById("contTarjetas")
-const sectionSelectAtq = document.getElementById('seleccionar-ataque')
-const sectionReiniciar = document.getElementById('boton-reiniciar')
-const btnCutremonPlayer = document.getElementById("btn-cutremon")
+let lienzo = mapa.getContext('2d')
 
-const btnReiniciar = document.getElementById("boton-reiniciar")
-const msgSection = document.getElementById('resultado')
-const spanCutremonEnemigo = document.getElementById("cutremon-enemigo")
-const spanCutremonJugador = document.getElementById("cutremon-jugador")
-const ataquesJugador = document.getElementById('ataques-jugador')
-const ataquesEnemigo = document.getElementById('ataques-enemigo')
-
-const sectionSelectCutremon = document.getElementById('seleccionar-cutremon')
-const contAtaques = document.getElementById('contAtaques')
 
 
 class Cutremon{
@@ -39,6 +45,12 @@ class Cutremon{
         this.foto = foto
         this.vida = vida
         this.ataques = []
+        this.x = 20
+        this.y = 30
+        this.ancho = 80
+        this.alto = 80
+        this.mapaFoto = new Image()
+        this.mapaFoto.src = foto
     }
 }
 
@@ -73,6 +85,7 @@ escoberto.ataques.push(
 cutremones.push(emputardo,retristre,escoberto)
 
 function iniciarJuego(){
+    
 
     cutremones.forEach(cutremon => {
         
@@ -95,6 +108,8 @@ function iniciarJuego(){
     
     sectionSelectAtq.style.display = 'none'
     sectionReiniciar.style.display = 'none'   
+    sectionVerMapa.style.display = 'none'
+
     btnCutremonPlayer.addEventListener('click', selectCutremon) 
     btnReiniciar.addEventListener('click',reiniciarJuego)
 }
@@ -251,11 +266,14 @@ function selectCutremon(){
     if(cutremonJugador != ''){
 
         
-        sectionSelectAtq.style.display = 'flex'
+        //sectionSelectAtq.style.display = 'flex'
     
         
         sectionSelectCutremon.style.display = 'none'
+        sectionVerMapa.style.display = 'flex'
+        let emputardoImg = new Image()
 
+        
         spanCutremonJugador.innerHTML = cutremonJugador
 
         selectAtaques(cutremonJugador)
@@ -318,4 +336,20 @@ function secuenciaAtaque(){
  
 }
 
+function drawCutremon(){
+    lienzo.clearRect(0,0,mapa.clientWidth, mapa.height)
+    lienzo.drawImage(
+        emputardo.mapaFoto,
+        emputardo.x,
+        emputardo.y,
+        emputardo.ancho,
+        emputardo.alto
+    )
+}
+
+function moverEmputardo(){
+    let velocidad = 5
+    emputardo.x = emputardo.x + velocidad
+    drawCutremon()
+}
 window.addEventListener('load', iniciarJuego)
