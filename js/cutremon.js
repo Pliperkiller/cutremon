@@ -16,6 +16,8 @@ const contAtaques = document.getElementById('contAtaques')
 const sectionVerMapa = document.getElementById('ver-mapa')
 const mapa = document.getElementById('mapa')
 
+
+
 let ataqueJugador
 let inputAtaqueJugador = []
 let ataqueEnemigo = []
@@ -24,6 +26,7 @@ let banderaAtaqueJugador = 0
 let saludJugador = 3
 let saludEnemigo = 3
 let cutremonJugador = ''
+let cutremonJugadorObj
 let cutremonEnemigo = ''
 let cutremones = []
 let ataquesCutremon
@@ -36,11 +39,17 @@ let victoriasJugador = 0
 let victoriasEnemigo = 0
 
 let lienzo = mapa.getContext('2d')
+let velocidad = 2
+
+let intervalo
+
+let canvasBackground = new Image()
+canvasBackground.src = './assets/map.png'
 
 
 
 class Cutremon{
-    constructor(nombre,foto,vida){
+    constructor(nombre,foto,vida,x,y){
         this.nombre = nombre
         this.foto = foto
         this.vida = vida
@@ -50,7 +59,9 @@ class Cutremon{
         this.ancho = 80
         this.alto = 80
         this.mapaFoto = new Image()
-        this.mapaFoto.src = foto
+        this.mapaFoto.src = fotoMapa
+        this.velocidadX = 0
+        this.velocidadY = 0
     }
 }
 
@@ -213,19 +224,6 @@ function ataqueAleatorioEnemigo(inputAtaqueEnemigo){
     console.log(randElement)
     ataqueEnemigo.push(randElement.nombre)
 
-
-    // rng = aleatorio(0,inputAtaqueEnemigo.length)
-    
-    // if(rng<=1){
-    //     ataqueEnemigo.push('FUEGO')
-    // }
-    // else if (rng<=3){
-    //     ataqueEnemigo.push('AGUA')
-    // }
-    // else{
-    //     ataqueEnemigo.push('TIERRA')
-    // }
-   
     if (ataqueEnemigo.length == 5){
         
         combate()
@@ -270,14 +268,15 @@ function selectCutremon(){
     
         
         sectionSelectCutremon.style.display = 'none'
-        sectionVerMapa.style.display = 'flex'
-        let emputardoImg = new Image()
 
         
         spanCutremonJugador.innerHTML = cutremonJugador
 
         selectAtaques(cutremonJugador)
+        cutremonJugadorObj = searchCutremon(cutremonJugador)
+        
         selectEnemyCutremon()
+        iniciarMapa()
     }
 
 }
@@ -336,20 +335,93 @@ function secuenciaAtaque(){
  
 }
 
-function drawCutremon(){
-    lienzo.clearRect(0,0,mapa.clientWidth, mapa.height)
+function drawCanvas(){
+    
+    cutremonJugadorObj.x = cutremonJugadorObj.x + cutremonJugadorObj.velocidadX
+    cutremonJugadorObj.y = cutremonJugadorObj.y + cutremonJugadorObj.velocidadY
+    lienzo.clearRect(0,0,mapa.width, mapa.height)
     lienzo.drawImage(
-        emputardo.mapaFoto,
-        emputardo.x,
-        emputardo.y,
-        emputardo.ancho,
-        emputardo.alto
+        canvasBackground,
+        0,
+        0,
+        mapa.width,
+        mapa.height
+    )
+    lienzo.drawImage(
+        cutremonJugadorObj.mapaFoto,
+        cutremonJugadorObj.x,
+        cutremonJugadorObj.y,
+        cutremonJugadorObj.ancho,
+        cutremonJugadorObj.alto
     )
 }
 
-function moverEmputardo(){
-    let velocidad = 5
-    emputardo.x = emputardo.x + velocidad
-    drawCutremon()
+function moverDerecha(){
+    cutremonJugadorObj.velocidadX = velocidad
 }
+
+function moverIzquierda(){
+    cutremonJugadorObj.velocidadX = -velocidad
+}
+
+function moverAbajo(){
+    cutremonJugadorObj.velocidadY = velocidad
+}
+
+function moverArriba(){
+    cutremonJugadorObj.velocidadY = -velocidad
+}
+
+function detenerMovimiento(){
+    cutremonJugadorObj.velocidadX = 0
+    cutremonJugadorObj.velocidadY = 0
+}
+
+function keyHeld(event){
+    switch (event.key) {
+        case 'ArrowUp':
+            moverArriba()
+            break
+    
+        case 'ArrowDown':
+            moverAbajo()
+            break
+    
+        case 'ArrowLeft':
+            moverIzquierda()
+            break
+    
+        case 'ArrowRight':
+            moverDerecha()
+            break
+    
+        default:
+            break
+    }
+}
+
+function iniciarMapa(){
+    mapa.width = 320
+    mapa.height = 240
+    
+    sectionVerMapa.style.display = 'flex'
+    intervalo = setInterval(drawCanvas, 50)
+
+    window.addEventListener('keydown', keyHeld)
+    window.addEventListener('keyup', detenerMovimiento)
+}
+
+function searchCutremon(){
+    let cutremonElegido
+    cutremones.forEach(function (cutremon){
+        
+        if (cutremon.nombre === cutremonJugador ){
+            cutremonElegido = cutremon
+        }
+
+    })
+    console.log(cutremonElegido,cutremonJugador)
+    return cutremonElegido
+}
+
 window.addEventListener('load', iniciarJuego)
